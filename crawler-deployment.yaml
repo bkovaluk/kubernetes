@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synergychat-crawler
+  labels:
+    app: synergychat-crawler
+  namespace: crawler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: synergychat-crawler
+  template:
+    metadata:
+      name: synergychat-crawler
+      labels:
+        app: synergychat-crawler
+    spec:
+      containers:
+        - name: synergychat-crawler
+          image: bootdotdev/synergychat-crawler:latest
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /cache
+              name: cache-volume
+          envFrom:
+            - configMapRef:
+                name: synergychat-crawler-configmap
+      volumes:
+        - name: cache-volume
+          emptyDir: {}
+      restartPolicy: Always
+      
